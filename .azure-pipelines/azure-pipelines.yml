@@ -9,20 +9,18 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '16.x'
-  displayName: 'Install Node.js'
-
-- script: |
-    npm install -g @angular/cli
-    npm install
-    npx nx run build
-  displayName: 'npm install & build'
-# Publish Build artifact
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Build Artifact'
-  inputs:
-    pathToPublish: dist/maverick
-    artifactName: maverick
+stages:
+  - stage: INIT
+    displayName: init
+    jobs:
+      - job: JOB_INITIALIZE
+        displayName: init
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '16.x'
+            displayName: 'Install Node.js'
+          - script: |
+              npm install -g @angular/cli
+              npm install
+              npx nx run build
