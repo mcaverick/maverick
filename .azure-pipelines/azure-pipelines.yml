@@ -10,8 +10,8 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - stage: STAGE_INIT
-    displayName: init
+  - stage: STAGE_INSTALL_NODE
+    displayName: install node
     jobs:
       - job: JOB_INIT
         displayName: init
@@ -21,6 +21,8 @@ stages:
               versionSpec: '16.x'
             displayName: 'Install Node.js'
   - template: ./stage-initialize.yml
-  - stage:
-          - script: |
-              npx nx run build
+  - stage: STAGE_BUILD
+    displayName: build
+    jobs:
+      - script: |
+          npx nx run build
