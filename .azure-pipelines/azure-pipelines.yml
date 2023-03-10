@@ -10,10 +10,10 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - stage: INIT
+  - stage: STAGE_INIT
     displayName: init
     jobs:
-      - job: JOB_INITIALIZE
+      - job: JOB_INIT
         displayName: init
         steps:
           - task: NodeTool@0
