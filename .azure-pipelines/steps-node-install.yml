@@ -14,5 +14,5 @@ steps:
   - ${{ if eq(parameters.installCypress, true) }}:
       - script: |
           yarn install --ignore-engines --frozen-lockfile
-        displayName: 'Install Dependencies (With Cypress)'
+        displayName: 'Install Dependencies'
         condition: ne(variables['YARN_CACHE_RESTORED'], 'true')
