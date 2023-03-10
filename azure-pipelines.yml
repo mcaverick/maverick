@@ -19,4 +19,10 @@ steps:
     npm install -g @angular/cli
     npm install
     npx nx run build
-  displayName: 'npm install'
+  displayName: 'npm install & build'
+# Publish Build artifact
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Build Artifact'
+  inputs:
+    pathToPublish: dist/apps
+    artifactName: apps
