@@ -10,5 +10,3 @@ stages:
             displayName: 'Print environment vars'
 
           - template: ./steps-node-install.yml
-            parameters:
-              installCypress: true
