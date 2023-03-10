@@ -26,6 +26,7 @@ stages:
     jobs:
       - job: BUILD
         steps:
+          - template: ./steps-node-install
           - script: |
               npx nx run build
             displayName: build Nx
