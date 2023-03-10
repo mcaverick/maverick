@@ -20,7 +20,7 @@ stages:
             inputs:
               versionSpec: '16.x'
             displayName: 'Install Node.js'
+  - template: ./stage-initialize.yml
+  - stage:
           - script: |
-              npm install -g @angular/cli
-              npm install
               npx nx run build
