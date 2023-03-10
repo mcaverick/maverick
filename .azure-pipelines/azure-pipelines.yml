@@ -24,5 +24,8 @@ stages:
   - stage: STAGE_BUILD
     displayName: build
     jobs:
-      - script: |
-          npx nx run build
+      - job: BUILD
+        steps:
+          - script: |
+              npx nx run build
+            displayName: build Nx
