@@ -1,0 +1,40 @@
+parameters:
+  - name: installCypress
+    type: boolean
+    default: false
+steps:
+  - script: |
+      echo "node version: $(node -v)"
+      echo "npm version: $(npm -v)"
+      echo "yarn version: $(yarn -v)"
+      echo $NODE_OPTIONS
+    displayName: 'Display Versions'
+  - task: Cache@2
+    inputs:
+      key: 'yarn_v12 | "$(Agent.OS)" | yarn.lock'
+      path: $(System.DefaultWorkingDirectory)/node_modules
+      cacheHitVar: YARN_CACHE_RESTORED
+    displayName: Cache Yarn packages
+  - ${{ if not(eq(parameters.installCypress, true)) }}:
+      - script: |
+          CYPRESS_INSTALL_BINARY=0 yarn install --ignore-engines --frozen-lockfile
+        displayName: 'Install Dependencies (Without Cypress)'
+        condition: ne(variables['YARN_CACHE_RESTORED'], 'true')
+  - ${{ if eq(parameters.installCypress, true) }}:
+      - bash: |
+          CYPRESS_VERSION=$(cat $(System.DefaultWorkingDirectory)/package.json | grep \"cypress\" | awk -F: '{ print $2 }' | sed 's/[",]//g')
+          echo $CYPRESS_VERSION
+          echo "##vso[task.setvariable variable=CYPRESS_VERSION]$CYPRESS_VERSION"
+        displayName: 'Get CYPRESS_VERSION'
+  - ${{ if eq(parameters.installCypress, true) }}:
+      - task: Cache@2
+        inputs:
+          key: 'cy_v7 | "$(Agent.OS)" | "$(CYPRESS_VERSION)"'
+          path: $(CYPRESS_CACHE_FOLDER)
+          cacheHitVar: CYPRESS_CACHE_RESTORED
+        displayName: 'Cache Cypress binary'
+  - ${{ if eq(parameters.installCypress, true) }}:
+      - script: |
+          yarn install --ignore-engines --frozen-lockfile
+        displayName: 'Install Dependencies (With Cypress)'
+        condition: or(ne(variables['YARN_CACHE_RESTORED'], 'true'), ne(variables['CYPRESS_CACHE_RESTORED'], 'true'))
